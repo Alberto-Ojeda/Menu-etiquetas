@@ -152,7 +152,7 @@ public class ControladorExcel implements ActionListener {
                 img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
                 img.scaleToFit(60, 40);
                 img.setAlignment(img.ALIGN_CENTER);
-                descripcion = String.valueOf(this.vistaE.jTable1.getValueAt(i, 1));
+                descripcion = String.valueOf(this.vistaE.jTable1.getValueAt(i, 1)).toUpperCase();
                  if (descripcion.length()>38 ) {
                 
                 descripcion= descripcion.substring(0,38);
@@ -286,7 +286,8 @@ public class ControladorExcel implements ActionListener {
                 }
                 img.setAlignment(img.ALIGN_CENTER);
                 
-                descripcion = String.valueOf(this.vistaE.jTable1.getValueAt(i, 1));
+                descripcion = String.valueOf(this.vistaE.jTable1.getValueAt(i, 1)).toUpperCase();
+                
              // String  descripcion2;
                 if (descripcion.length()>40) {
                 descripcion= descripcion.substring(0,40);
