@@ -5,9 +5,11 @@
 package Vista;
 
 import Controlador.ControladorExcel;
+import Controlador.ControladorLiverpoolExcel;
 import Controlador.controladorExcelHome;
 import Controlador.controladorExtraerEtiquetas;
 import Modelo.ModeloExcel;
+import Modelo.ModeloLiverpoolExcel;
 import Modelo.modeloEtiquetas;
 import Modelo.modeloExcelHome;
 
@@ -40,6 +42,7 @@ public class Menu extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,14 +70,14 @@ public class Menu extends javax.swing.JFrame {
         jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, 210, 60));
 
         jButton5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton5.setText("Home Depot");
+        jButton5.setText("Liverpool");
         jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, 210, 60));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, 210, 60));
 
         jPanel2.setBackground(new java.awt.Color(134, 142, 151));
 
@@ -98,6 +101,16 @@ public class Menu extends javax.swing.JFrame {
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, 400, 550));
+
+        jButton6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jButton6.setText("Home Depot");
+        jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, 210, 60));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,13 +150,20 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        modeloExcelHome modeloH = new modeloExcelHome();
-        vistaHome vistaH = new vistaHome();
-        controladorExcelHome ControladorExcel = new controladorExcelHome(vistaH, modeloH);
-        vistaH.setVisible(true);
-        vistaH.setLocationRelativeTo(null);
+        ModeloLiverpoolExcel modeloL = new ModeloLiverpoolExcel();
+       
+        VistaLiverpool vistaL= new VistaLiverpool();
+              ControladorLiverpoolExcel contraControladorLiverpoolExcel = new ControladorLiverpoolExcel(vistaL, modeloL);
+  
+        vistaL.setLocationRelativeTo(null);
+        vistaL.setVisible(true);
+            
 this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -185,6 +205,7 @@ this.dispose();        // TODO add your handling code here:
     public javax.swing.JButton jButton3;
     public javax.swing.JButton jButton4;
     public javax.swing.JButton jButton5;
+    public javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
