@@ -2,6 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/BECARIOTI/Documents/codigoEtiquetasCinlat/codigocinlat/EtiquetasMenu/src/Modelo/ModeloExcel.java</file>
+            <file>file:/C:/Users/BECARIOTI/Documents/codigoEtiquetasCinlat/codigocinlat/EtiquetasMenu/src/Controlador/ControladorLiverpoolExcel.java</file>
+            <file>file:/C:/Users/BECARIOTI/Documents/codigoEtiquetasCinlat/codigocinlat/EtiquetasMenu/src/Controlador/ControladorExcel.java</file>
+            <file>file:/C:/Users/BECARIOTI/Documents/codigoEtiquetasCinlat/codigocinlat/EtiquetasMenu/src/Modelo/generacionPdf.java</file>
+            <file>file:/C:/Users/BECARIOTI/Documents/codigoEtiquetasCinlat/codigocinlat/EtiquetasMenu/src/Vista/Menu.java</file>
+            <file>file:/C:/Users/BECARIOTI/Documents/codigoEtiquetasCinlat/codigocinlat/EtiquetasMenu/src/Modelo/ModeloLiverpoolExcel.java</file>
+            <file>file:/C:/Users/BECARIOTI/Documents/codigoEtiquetasCinlat/codigocinlat/EtiquetasMenu/src/Vista/VistaLiverpool.java</file>
+            <file>file:/C:/Users/BECARIOTI/Documents/codigoEtiquetasCinlat/codigocinlat/EtiquetasMenu/src/Vista/Vista.java</file>
+        </group>
     </open-files>
 </project-private>

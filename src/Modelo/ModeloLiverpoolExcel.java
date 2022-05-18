@@ -27,7 +27,18 @@ VistaLiverpool vistaL = new VistaLiverpool();
             wb = WorkbookFactory.create(new FileInputStream(archivo));
                Sheet hoja = wb.getSheetAt(0);
                Row row=hoja.createRow(0);
-               row.createCell(0).setCellValue("Provedor");
+                row.createCell(0).setCellValue("Provedor");
+               row.createCell(1).setCellValue("No. Provedor");
+               row.createCell(2).setCellValue("SKU");
+               row.createCell(3).setCellValue("Descripción");
+               row.createCell(4).setCellValue("Modelo");
+               row.createCell(5).setCellValue("Color");
+               row.createCell(6).setCellValue("Bulto");
+               row.createCell(7).setCellValue("Peso con empaque");
+               row.createCell(8).setCellValue("cantidad");
+               row.createCell(9).setCellValue("selector");
+               row.createCell(10).setCellValue("Selector");
+ /*              row.createCell(0).setCellValue("Provedor");
                row.createCell(1).setCellValue("No. Provedor");
                row.createCell(2).setCellValue("SKU");
                row.createCell(3).setCellValue("Descripción");
@@ -36,8 +47,8 @@ VistaLiverpool vistaL = new VistaLiverpool();
                row.createCell(6).setCellValue("Contenido");
                row.createCell(7).setCellValue("Bulto");
                row.createCell(8).setCellValue("Peso con empaque");
-               row.createCell(9).setCellValue("fecha");
-               row.createCell(10).setCellValue("cantidad de bultos");
+               row.createCell(9).setCellValue("Cantidad");
+               row.createCell(10).setCellValue("Selector");*/
 
                Iterator filaIterator = hoja.rowIterator();
                

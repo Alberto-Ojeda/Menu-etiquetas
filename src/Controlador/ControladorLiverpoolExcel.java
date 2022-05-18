@@ -1,4 +1,3 @@
-
 package Controlador;
 
 import java.awt.event.ActionEvent;
@@ -33,6 +32,8 @@ import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -67,18 +68,19 @@ public class ControladorLiverpoolExcel implements ActionListener {
         tc.setCellEditor(table.getDefaultEditor(Boolean.class));
         tc.setCellRenderer(table.getDefaultRenderer(Boolean.class));
         for (int i = 0; i < vistaL.jTable1.getRowCount(); i++) {
-            this.vistaL.jTable1.setValueAt(true, i, 3);
+            this.vistaL.jTable1.setValueAt(true, i, 10);
         }
     }
 
     public void accederDatosFilacopia5x5() throws DocumentException, FileNotFoundException, IOException, PrinterException {
+        //se establecen los tamaños para la etiqueta producto la cual tendra un tamaño aprox de 10x10cm
         this.vistaL = vistaL;
         boolean columna;
         int i = 0;
         JFileChooser selecArchivo = new JFileChooser();
         File archivo = null;
-        int width = 131;
-        int height = 131;
+        int width = 275;
+        int height = 275;
         Rectangle rec = new Rectangle(width, height);
         Rectangle rec2 = new Rectangle(width, height);
         rec.setBorderColor(BaseColor.BLACK);
@@ -87,14 +89,30 @@ public class ControladorLiverpoolExcel implements ActionListener {
         rec.setBorderWidthRight(2);
         rec.setBorderWidthTop(4);
 
-        String sku, descripcion, ups,desa;
+//una vez estableciendo el tamaño se definiran nuestras variables que serviran para escribir en la etiqueta
+        String datProvedor, numProvedor, sku, descripcion, modelo, color, bulto, pesoEmpaque, ups, desa, cantidadBultos, fechaE;
+        columna = (boolean) this.vistaL.jTable1.getValueAt(0, 10);
+        Date fecha = this.vistaL.jDateChooser1.getDate();
+        SimpleDateFormat formato = new SimpleDateFormat("d/MM/YYYY");
+        JOptionPane.showMessageDialog(null, "la fecha es" + formato.format(fecha));
 
-        columna = (boolean) this.vistaL.jTable1.getValueAt(0, 3);
-        sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
-        ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+        fechaE = String.valueOf(formato.format(fecha));
+        datProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
+        numProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1));
+        sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+        descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3));
+        modelo = String.valueOf(this.vistaL.jTable1.getValueAt(i, 4));
+        color = String.valueOf(this.vistaL.jTable1.getValueAt(i, 5));
+        bulto = String.valueOf(this.vistaL.jTable1.getValueAt(i, 6));
+        pesoEmpaque = String.valueOf(this.vistaL.jTable1.getValueAt(i, 7));
+        cantidadBultos=String.valueOf(this.vistaL.jTable1.getValueAt(i, 8));
+        
         //  if(selecArchivo.showDialog(null, "Crear")==JFileChooser.APPROVE_OPTION){
         //    archivo=selecArchivo.getSelectedFile();
         // }
+
+        /*A continuación se realiza la iniciación del documento que se estara construyendo 
+        junto con la definición de los parrafos*/
         Document doc = new Document(PageSize.LEGAL_LANDSCAPE);
         ByteArrayOutputStream archivotemp = new ByteArrayOutputStream();
         PdfWriter pdf = PdfWriter.getInstance(doc, archivotemp);
@@ -104,85 +122,167 @@ public class ControladorLiverpoolExcel implements ActionListener {
         doc.setMarginMirroring(columna);
         doc.open();
         Barcode128 code = new Barcode128();
-        //cambiams a sku porque estaba con ups
+        //Creamos el codigo de barras con el SKU
         code.setCode(sku);
         Image img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
         img.scaleToFit(50, 30);
-        Paragraph parrafo = new Paragraph(8);
-        Paragraph sku_ = new Paragraph(8);
-        Paragraph header = new Paragraph(10);
+
+        //Definimos los parrafos
+        //----------------------------------------------------------
+        Paragraph datProvedorP = new Paragraph();
+        Paragraph numProvedorP = new Paragraph();
+        Paragraph skuP = new Paragraph();
+        Paragraph parrafo = new Paragraph();
+        Paragraph modeloP = new Paragraph();
+        Paragraph colorP = new Paragraph();
+        Paragraph bultoP = new Paragraph();
+        Paragraph pesoEmpaqueP = new Paragraph();
+        Paragraph cantidadBultosP = new Paragraph();
+        //-----------------------------------------------------------
+        Paragraph header = new Paragraph();
         Paragraph line = new Paragraph();
         Paragraph salto = new Paragraph(6);
-        parrafo.setAlignment(Paragraph.ALIGN_CENTER);
-        header.setAlignment(Paragraph.ALIGN_CENTER);
+
+        // se define la alineación junto con el tamaño que tendran las letras
+        //-------------------------------------------------------------------
+        datProvedorP.setAlignment(Paragraph.ALIGN_LEFT);
+        numProvedorP.setAlignment(Paragraph.ALIGN_LEFT);
+        skuP.setAlignment(Paragraph.ALIGN_LEFT);
+        parrafo.setAlignment(Paragraph.ALIGN_LEFT);
+        modeloP.setAlignment(Paragraph.ALIGN_LEFT);
+        colorP.setAlignment(Paragraph.ALIGN_LEFT);
+        bultoP.setAlignment(Paragraph.ALIGN_LEFT);
+        pesoEmpaqueP.setAlignment(Paragraph.ALIGN_LEFT);
+        cantidadBultosP.setAlignment(Paragraph.ALIGN_LEFT);
+        //-------------------------------------------------------------------        
+
+        header.setAlignment(Paragraph.ALIGN_RIGHT);
         line.setAlignment(Paragraph.ALIGN_CENTER);
-        line.setSpacingBefore((float) .2);
-        line.setSpacingAfter((float) .2);
-        sku_.setAlignment(Paragraph.ALIGN_CENTER);
-        sku_.setSpacingAfter((float) 0.10);
-        sku_.setSpacingBefore((float) 0.10);
-        parrafo.setFont(FontFactory.getFont("Arial", 8, Font.BOLD, BaseColor.DARK_GRAY));
-        parrafo.setIndentationLeft(8);
-        parrafo.setIndentationRight(8);
-       
-        sku_.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
-        sku_.setSpacingBefore(5);
-        sku_.setSpacingAfter(5);
-        sku_.setIndentationLeft(10);
-        sku_.setIndentationRight(10);
-        
-        header.setFont(FontFactory.getFont("Arial",14, Font.BOLD, BaseColor.DARK_GRAY));
+        //------------------------------------------------------------------
+        //Definición del tamaño de letra
+        datProvedorP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+
+        numProvedorP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+
+        skuP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        /*        skuP.setSpacingBefore(5);
+        skuP.setSpacingAfter(5);
+        skuP.setIndentationLeft(10);
+        skuP.setIndentationRight(10);*/
+
+        parrafo.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        /*        parrafo.setIndentationLeft(8);
+        parrafo.setIndentationRight(8);*/
+
+        modeloP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        colorP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        bultoP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        pesoEmpaqueP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        cantidadBultosP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+
+        header.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
         header.setIndentationLeft(10);
         header.setIndentationRight(10);
+        //-------------------------------------------------------------------------------
 
         doc.open();
-        header.add("Claroshop");
-        header.add("\n"+"__________");
+        //      header.add("Claroshop");
+        //      header.add("\n" + "__________");
         salto.add("\n");
- //       line.add("_____________");
+        //comienza el while para dar inicio a los ciclos y poder obtener los datos de la tabla
         while (i < this.vistaL.jTable1.getRowCount()) {
-            columna = (boolean) this.vistaL.jTable1.getValueAt(i, 3);
+            for (int h = 0; h < Integer.parseInt(cantidadBultos); h++) {
+            columna = (boolean) this.vistaL.jTable1.getValueAt(i, 10);
             if (columna == true) {
-                sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
 
-                if (sku.length()>9 ) {
-                sku= sku.substring(0,9);
-                
+                datProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
+                numProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1));
+                sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+                descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3));
+                modelo = String.valueOf(this.vistaL.jTable1.getValueAt(i, 4));
+                color = String.valueOf(this.vistaL.jTable1.getValueAt(i, 5));
+                bulto = String.valueOf(this.vistaL.jTable1.getValueAt(i, 6));
+                pesoEmpaque = String.valueOf(this.vistaL.jTable1.getValueAt(i, 7));
+                cantidadBultos=String.valueOf(this.vistaL.jTable1.getValueAt(i, 8));
+
+
+                //Validación de los sku de cada uno 
+                if (sku.length() > 13) {
+                    sku = sku.substring(0, 12);
                 }
-                ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+
+                //           ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
                 code.setCode(sku);
                 img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
-                img.scaleToFit(60, 40);
-                img.setAlignment(img.ALIGN_CENTER);
-                descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1)).toUpperCase();
-                 if (descripcion.length()>38 ) {
-                
-                descripcion= descripcion.substring(0,38);
+                img.scaleToFit(100, 70);
+                img.setAlignment(img.ALIGN_RIGHT);
+                descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3)).toUpperCase();
+                if (descripcion.length() > 38) {
+
+                    descripcion = descripcion.substring(0, 38);
 
                 }
-                descripcion2=descripcion.toCharArray();                
-                i = i + 1;
+                descripcion2 = descripcion.toCharArray();
+                if (h+1==Integer.parseInt(cantidadBultos)) {
+                i = i + 1;                    
+                }
 
+                header.add(fechaE);
                 doc.add(header);
+                datProvedorP.add("Proveedor:" + " " + datProvedor);
+                doc.add(datProvedorP);
+                numProvedorP.add("No. De Provedor:" + " " + numProvedor);
+                doc.add(numProvedorP);
+                skuP.add("SKU:" + " " + sku);
+//                skuP.add("SKU:" + " " + sku + "\n" + "___________");
+                doc.add(skuP);
+                doc.add(img);
+                parrafo.add("Descripción:" + " " + descripcion);
+                doc.add(parrafo);
+                                doc.add(salto);
 
-                sku_.add("SKU:" + " " + sku+"\n"+"___________");
+                modeloP.add("Modelo:" + " " + modelo);
+                doc.add(modeloP);
+                                doc.add(salto);
+
+                colorP.add("Color:" + " " + color);
+                doc.add(colorP);
+                                doc.add(salto);
+
+                int cuentaBulto;
+                cuentaBulto=Integer.parseInt(bulto)+h;
+                bulto=String.valueOf(cuentaBulto);
+                bultoP.add("Bulto:" + " " + bulto + " "+ "de"+" "+cantidadBultos);
+                doc.add(bultoP);
+                                doc.add(salto);
+
+                pesoEmpaqueP.add("Peso con empaque:" + " " + pesoEmpaque);
+                doc.add(pesoEmpaqueP);
+
 
                 for (int j = 0; j < descripcion.length(); j++) {
-                desa=String.valueOf(descripcion2[j]);
-                parrafo.add(desa);                    
+                    desa = String.valueOf(descripcion2[j]);
+                    parrafo.add(desa);
                 }
-                parrafo.add("\n"+"___________");
+                //  parrafo.add("\n" + "___________");
 
-                doc.add(sku_);
-                 if (descripcion.length()<21) {
+                 if (descripcion.length() < 34) {
                     doc.add(salto);
                 }
-                doc.add(parrafo);
-                doc.add(img);
+                //     doc.add(parrafo);
+
                 line.setSpacingBefore((float) -2);
                 pdf.getPageSize();
+                header.removeAll(header);
+                datProvedorP.removeAll(datProvedorP);
+                numProvedorP.removeAll(numProvedorP);
+                modeloP.removeAll(modeloP);
+                colorP.removeAll(colorP);
+                bultoP.removeAll(bultoP);
+                pesoEmpaqueP.removeAll(pesoEmpaqueP);
                 parrafo.removeAll(parrafo);
-                sku_.removeAll(sku_);
+                skuP.removeAll(skuP);
+
                 if (i + 1 > this.vistaL.jTable1.getRowCount()) {
                     doc.close();
                     ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
@@ -200,7 +300,7 @@ public class ControladorLiverpoolExcel implements ActionListener {
                     doc.close();
                     ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
                     PDDocument documento12 = PDDocument.load(input);
-                    
+
                     PrinterJob job = PrinterJob.getPrinterJob();
                     if (job.printDialog() == true) {
                         job.setPageable(new PDFPageable(documento12));
@@ -209,6 +309,7 @@ public class ControladorLiverpoolExcel implements ActionListener {
                 }
             }
         }
+    }
     }
 
     public void imprimirPdfMayor() throws DocumentException, FileNotFoundException, IOException, PrinterException {
@@ -222,20 +323,20 @@ public class ControladorLiverpoolExcel implements ActionListener {
         int height = 203;
         Rectangle rec = new Rectangle(width, height2);
         rec.setBorderColor(BaseColor.BLACK);
-        
+
         rec.setBorderWidthLeft(2);
         rec.setBorderWidthRight(2);
         rec.setBorderWidthTop(3);
         String sku, descripcion, ups;
-        columna = (boolean) this.vistaL.jTable1.getValueAt(0, 3);
+        columna = (boolean) this.vistaL.jTable1.getValueAt(0, 10);
         sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
-        ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));    
+        ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
         Document doc = new Document();
         ByteArrayOutputStream archivotemp = new ByteArrayOutputStream();
         PdfWriter pdf = PdfWriter.getInstance(doc, archivotemp);
         doc.setPageSize(rec);
-        doc.setMargins(0, 0, 10,50);
-        
+        doc.setMargins(0, 0, 10, 50);
+
         doc.open();
         Barcode128 code = new Barcode128();
         code.setCode(sku);
@@ -253,50 +354,49 @@ public class ControladorLiverpoolExcel implements ActionListener {
         line.setAlignment(Paragraph.ALIGN_CENTER);
         sku_.setAlignment(Paragraph.ALIGN_CENTER);
         parrafo.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));
-         parrafo.setIndentationLeft(8);
+        parrafo.setIndentationLeft(8);
         parrafo.setIndentationRight(8);
         sku_.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));
         header.setFont(FontFactory.getFont("Tahoma", 20, Font.BOLD, BaseColor.DARK_GRAY));
-        line2.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));        
+        line2.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));
         doc.open();
-       
+
         header.add("Claroshop");
         salto.add("\n");
         line.add("_______________________________");
         line2.add("_________________________________________");
         while (i < this.vistaL.jTable1.getRowCount()) {
-            columna = (boolean) this.vistaL.jTable1.getValueAt(i, 3);
+            columna = (boolean) this.vistaL.jTable1.getValueAt(i, 10);
             if (columna == true) {
                 sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
 
-                if (sku.length()>9 ) {
+                if (sku.length() > 9) {
 
-                sku= sku.substring(0,9);
-                
+                    sku = sku.substring(0, 9);
+
                 }
                 ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
                 code.setCode(sku);
                 img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
                 img.scaleToFit(90, 90);
-                if (sku.length()<5) {
+                if (sku.length() < 5) {
                     img.scaleToFit(65, 65);
-                    if (sku.length()<3) {
-                img.scaleToFit(50, 50);
-                        
+                    if (sku.length() < 3) {
+                        img.scaleToFit(50, 50);
+
                     }
-                
-                }
-                img.setAlignment(img.ALIGN_CENTER);
-                
-                descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1)).toUpperCase();
-                
-             // String  descripcion2;
-                if (descripcion.length()>40) {
-                descripcion= descripcion.substring(0,40);
 
                 }
-                
-                
+                img.setAlignment(img.ALIGN_CENTER);
+
+                descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1)).toUpperCase();
+
+                // String  descripcion2;
+                if (descripcion.length() > 40) {
+                    descripcion = descripcion.substring(0, 40);
+
+                }
+
                 i = i + 1;
                 doc.add(header);
                 doc.add(line);
@@ -304,11 +404,11 @@ public class ControladorLiverpoolExcel implements ActionListener {
                 parrafo.add(descripcion);
                 doc.add(sku_);
                 doc.add(line);
-                if (descripcion.length()<34) {
+                if (descripcion.length() < 34) {
                     doc.add(salto);
                 }
                 doc.add(parrafo);
-             
+
                 doc.add(line);
                 doc.add(img);
                 doc.add(salto);
@@ -318,16 +418,16 @@ public class ControladorLiverpoolExcel implements ActionListener {
                 parrafo.removeAll(parrafo);
                 sku_.removeAll(sku_);
                 if (i + 1 > this.vistaL.jTable1.getRowCount()) {
-                    
+
                     doc.close();
-                    
+
                     ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
-                    
+
                     PDDocument documento12 = PDDocument.load(input);
-                    
+
                     PrinterJob job = PrinterJob.getPrinterJob();
                     if (job.printDialog() == true) {
-                        
+
                         job.setPageable(new PDFPageable(documento12));
                         job.print();
                     }
@@ -338,13 +438,13 @@ public class ControladorLiverpoolExcel implements ActionListener {
                     doc.close();
                     ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
                     PDDocument documento12 = PDDocument.load(input);
-                    
+
                     PrinterJob job = PrinterJob.getPrinterJob();
                     if (job.printDialog() == true) {
                         job.setPageable(new PDFPageable(documento12));
                         job.print();
                     }
-                    
+
                 }
             }
 
@@ -371,7 +471,7 @@ public class ControladorLiverpoolExcel implements ActionListener {
                     JOptionPane.showMessageDialog(null,
                             modeloL.Importar(archivo, vistaL.jTable1) + "\n Formato ." + archivo.getName().substring(archivo.getName().lastIndexOf(".") + 1),
                             "IMPORTAR EXCEL", JOptionPane.INFORMATION_MESSAGE);
-                    addCheckBox(3, this.vistaL.jTable1);
+                    addCheckBox(10, this.vistaL.jTable1);
                 } else {
                     JOptionPane.showMessageDialog(null, "Elija un formato valido.");
                 }
