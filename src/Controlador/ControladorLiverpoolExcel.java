@@ -93,6 +93,9 @@ public class ControladorLiverpoolExcel implements ActionListener {
         String datProvedor, numProvedor, sku, descripcion, modelo, color, bulto, pesoEmpaque, ups, desa, cantidadBultos, fechaE;
         columna = (boolean) this.vistaL.jTable1.getValueAt(0, 10);
         Date fecha = this.vistaL.jDateChooser1.getDate();
+        if (fecha==null) {
+                    JOptionPane.showMessageDialog(null, "Inserta fecha" );
+        }else{
         SimpleDateFormat formato = new SimpleDateFormat("d/MM/YYYY");
         JOptionPane.showMessageDialog(null, "la fecha es" + formato.format(fecha));
 
@@ -103,10 +106,10 @@ public class ControladorLiverpoolExcel implements ActionListener {
         descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3));
         modelo = String.valueOf(this.vistaL.jTable1.getValueAt(i, 4));
         color = String.valueOf(this.vistaL.jTable1.getValueAt(i, 5));
-        bulto = String.valueOf(this.vistaL.jTable1.getValueAt(i, 6));
-        pesoEmpaque = String.valueOf(this.vistaL.jTable1.getValueAt(i, 7));
-        cantidadBultos=String.valueOf(this.vistaL.jTable1.getValueAt(i, 8));
-        
+        bulto = String.valueOf(this.vistaL.jTable1.getValueAt(i, 7));
+        pesoEmpaque = String.valueOf(this.vistaL.jTable1.getValueAt(i, 8));
+        cantidadBultos = String.valueOf(this.vistaL.jTable1.getValueAt(i, 9));
+
         //  if(selecArchivo.showDialog(null, "Crear")==JFileChooser.APPROVE_OPTION){
         //    archivo=selecArchivo.getSelectedFile();
         // }
@@ -192,265 +195,387 @@ public class ControladorLiverpoolExcel implements ActionListener {
         //comienza el while para dar inicio a los ciclos y poder obtener los datos de la tabla
         while (i < this.vistaL.jTable1.getRowCount()) {
             for (int h = 0; h < Integer.parseInt(cantidadBultos); h++) {
-            columna = (boolean) this.vistaL.jTable1.getValueAt(i, 10);
-            if (columna == true) {
+                columna = (boolean) this.vistaL.jTable1.getValueAt(i, 10);
+                if (columna == true) {
 
-                datProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
-                numProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1));
-                sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
-                descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3));
-                modelo = String.valueOf(this.vistaL.jTable1.getValueAt(i, 4));
-                color = String.valueOf(this.vistaL.jTable1.getValueAt(i, 5));
-                bulto = String.valueOf(this.vistaL.jTable1.getValueAt(i, 6));
-                pesoEmpaque = String.valueOf(this.vistaL.jTable1.getValueAt(i, 7));
-                cantidadBultos=String.valueOf(this.vistaL.jTable1.getValueAt(i, 8));
+                    datProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
+                    numProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1));
+                    sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+                    descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3));
+                    modelo = String.valueOf(this.vistaL.jTable1.getValueAt(i, 4));
+                    color = String.valueOf(this.vistaL.jTable1.getValueAt(i, 5));
+                    bulto = String.valueOf(this.vistaL.jTable1.getValueAt(i, 7));
+                    pesoEmpaque = String.valueOf(this.vistaL.jTable1.getValueAt(i, 8));
+                    cantidadBultos = String.valueOf(this.vistaL.jTable1.getValueAt(i, 9));
 
-
-                //Validación de los sku de cada uno 
-                if (sku.length() > 13) {
-                    sku = sku.substring(0, 12);
-                }
-
-                //           ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
-                code.setCode(sku);
-                img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
-                img.scaleToFit(100, 70);
-                img.setAlignment(img.ALIGN_RIGHT);
-                descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3)).toUpperCase();
-                if (descripcion.length() > 38) {
-
-                    descripcion = descripcion.substring(0, 38);
-
-                }
-                descripcion2 = descripcion.toCharArray();
-                if (h+1==Integer.parseInt(cantidadBultos)) {
-                i = i + 1;                    
-                }
-
-                header.add(fechaE);
-                doc.add(header);
-                datProvedorP.add("Proveedor:" + " " + datProvedor);
-                doc.add(datProvedorP);
-                numProvedorP.add("No. De Provedor:" + " " + numProvedor);
-                doc.add(numProvedorP);
-                skuP.add("SKU:" + " " + sku);
-//                skuP.add("SKU:" + " " + sku + "\n" + "___________");
-                doc.add(skuP);
-                doc.add(img);
-                parrafo.add("Descripción:" + " " + descripcion);
-                doc.add(parrafo);
-                                doc.add(salto);
-
-                modeloP.add("Modelo:" + " " + modelo);
-                doc.add(modeloP);
-                                doc.add(salto);
-
-                colorP.add("Color:" + " " + color);
-                doc.add(colorP);
-                                doc.add(salto);
-
-                int cuentaBulto;
-                cuentaBulto=Integer.parseInt(bulto)+h;
-                bulto=String.valueOf(cuentaBulto);
-                bultoP.add("Bulto:" + " " + bulto + " "+ "de"+" "+cantidadBultos);
-                doc.add(bultoP);
-                                doc.add(salto);
-
-                pesoEmpaqueP.add("Peso con empaque:" + " " + pesoEmpaque);
-                doc.add(pesoEmpaqueP);
-
-
-                for (int j = 0; j < descripcion.length(); j++) {
-                    desa = String.valueOf(descripcion2[j]);
-                    parrafo.add(desa);
-                }
-                //  parrafo.add("\n" + "___________");
-
-                 if (descripcion.length() < 34) {
-                    doc.add(salto);
-                }
-                //     doc.add(parrafo);
-
-                line.setSpacingBefore((float) -2);
-                pdf.getPageSize();
-                header.removeAll(header);
-                datProvedorP.removeAll(datProvedorP);
-                numProvedorP.removeAll(numProvedorP);
-                modeloP.removeAll(modeloP);
-                colorP.removeAll(colorP);
-                bultoP.removeAll(bultoP);
-                pesoEmpaqueP.removeAll(pesoEmpaqueP);
-                parrafo.removeAll(parrafo);
-                skuP.removeAll(skuP);
-
-                if (i + 1 > this.vistaL.jTable1.getRowCount()) {
-                    doc.close();
-                    ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
-                    PDDocument documento12 = PDDocument.load(input);
-                    PrinterJob job = PrinterJob.getPrinterJob();
-                    if (job.printDialog() == true) {
-                        job.setPageable(new PDFPageable(documento12));
-                        job.print();
+                    //Validación de los sku de cada uno 
+                    if (sku.length() > 13) {
+                        sku = sku.substring(0, 12);
                     }
-                }
-            } else if (columna == false) {
-                i = i + 1;
 
-                if (i + 1 > this.vistaL.jTable1.getRowCount()) {
-                    doc.close();
-                    ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
-                    PDDocument documento12 = PDDocument.load(input);
+                    //           ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+                    code.setCode(sku);
+                    img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
+                    img.scaleToFit(100, 70);
+                    img.setBorderColorBottom(BaseColor.WHITE);
+                    img.setBorderWidthBottom(8);
+                    img.setAlignment(img.ALIGN_RIGHT);
+                    descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3)).toUpperCase();
+                    if (descripcion.length() > 38) {
 
-                    PrinterJob job = PrinterJob.getPrinterJob();
-                    if (job.printDialog() == true) {
-                        job.setPageable(new PDFPageable(documento12));
-                        job.print();
+                        descripcion = descripcion.substring(0, 38);
+
+                    }
+                    descripcion2 = descripcion.toCharArray();
+                    if (h + 1 == Integer.parseInt(cantidadBultos)) {
+                        i = i + 1;
+                    }
+
+                    header.add(fechaE);
+                    doc.add(header);
+                    datProvedorP.add("Proveedor:" + " " + datProvedor);
+                    doc.add(datProvedorP);
+                    numProvedorP.add("No. De Provedor:" + " " + numProvedor);
+                    doc.add(numProvedorP);
+                    skuP.add("SKU:" + " " + sku);
+//                skuP.add("SKU:" + " " + sku + "\n" + "___________");
+                    doc.add(skuP);
+                    doc.add(img);
+                    if (descripcion.length() < 20) {
+                        doc.add(salto);
+                    }
+                    
+                    parrafo.add("Descripción:" + " " + descripcion);
+                    doc.add(parrafo);
+                    doc.add(salto);
+
+                    modeloP.add("Modelo:" + " " + modelo);
+                    doc.add(modeloP);
+                    doc.add(salto);
+
+                    colorP.add("Color:" + " " + color);
+                    doc.add(colorP);
+                    doc.add(salto);
+
+                    int cuentaBulto;
+                    cuentaBulto = Integer.parseInt(bulto) + h;
+                    bulto = String.valueOf(cuentaBulto);
+                    bultoP.add("Bulto:" + " " + bulto + " " + "de" + " " + cantidadBultos);
+                    doc.add(bultoP);
+                    doc.add(salto);
+
+                    pesoEmpaqueP.add("Peso con empaque:" + " " + pesoEmpaque);
+                    doc.add(pesoEmpaqueP);
+
+                    for (int j = 0; j < descripcion.length(); j++) {
+                        desa = String.valueOf(descripcion2[j]);
+                        parrafo.add(desa);
+                    }
+                    //  parrafo.add("\n" + "___________");
+
+                    if (descripcion.length() < 34) {
+                        doc.add(salto);
+                    }
+                    //     doc.add(parrafo);
+
+                    line.setSpacingBefore((float) -2);
+                    pdf.getPageSize();
+                    header.removeAll(header);
+                    datProvedorP.removeAll(datProvedorP);
+                    numProvedorP.removeAll(numProvedorP);
+                    modeloP.removeAll(modeloP);
+                    colorP.removeAll(colorP);
+                    bultoP.removeAll(bultoP);
+                    pesoEmpaqueP.removeAll(pesoEmpaqueP);
+                    parrafo.removeAll(parrafo);
+                    skuP.removeAll(skuP);
+
+                    if (i + 1 > this.vistaL.jTable1.getRowCount()) {
+                        doc.close();
+                        ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
+                        PDDocument documento12 = PDDocument.load(input);
+                        PrinterJob job = PrinterJob.getPrinterJob();
+                        if (job.printDialog() == true) {
+                            job.setPageable(new PDFPageable(documento12));
+                            job.print();
+                        }
+                    }
+                } else if (columna == false) {
+                       if (h + 1 == Integer.parseInt(cantidadBultos)) {
+                        i = i + 1;
+                    }
+                    if (i + 1 > this.vistaL.jTable1.getRowCount()) {
+                        doc.close();
+                        ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
+                        PDDocument documento12 = PDDocument.load(input);
+
+                        PrinterJob job = PrinterJob.getPrinterJob();
+                        if (job.printDialog() == true) {
+                            job.setPageable(new PDFPageable(documento12));
+                            job.print();
+                        }
                     }
                 }
             }
         }
     }
     }
-
     public void imprimirPdfMayor() throws DocumentException, FileNotFoundException, IOException, PrinterException {
+        //se establecen los tamaños para la etiqueta producto la cual tendra un tamaño aprox de 10x10cm
         this.vistaL = vistaL;
         boolean columna;
         int i = 0;
         JFileChooser selecArchivo = new JFileChooser();
         File archivo = null;
         int width = 275;
-        int height2 = 275;
-        int height = 203;
-        Rectangle rec = new Rectangle(width, height2);
+        int height = 275;
+        Rectangle rec = new Rectangle(width, height);
+        Rectangle rec2 = new Rectangle(width, height);
         rec.setBorderColor(BaseColor.BLACK);
-
-        rec.setBorderWidthLeft(2);
+        rec.setBorderWidthBottom(2);
+        rec.setBorderWidthLeft(3);
         rec.setBorderWidthRight(2);
-        rec.setBorderWidthTop(3);
-        String sku, descripcion, ups;
+        rec.setBorderWidthTop(4);
+
+//una vez estableciendo el tamaño se definiran nuestras variables que serviran para escribir en la etiqueta
+        String datProvedor, numProvedor, sku, descripcion, modelo, color, bulto, pesoEmpaque, ups, desa, cantidadBultos, fechaE, contenido;
         columna = (boolean) this.vistaL.jTable1.getValueAt(0, 10);
-        sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
-        ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
-        Document doc = new Document();
+        Date fecha = this.vistaL.jDateChooser1.getDate();
+          if (fecha==null) {
+                    JOptionPane.showMessageDialog(null, "Inserta fecha" );
+        }else{
+        SimpleDateFormat formato = new SimpleDateFormat("d/MM/YYYY");
+        JOptionPane.showMessageDialog(null, "la fecha es" + formato.format(fecha));
+
+        fechaE = String.valueOf(formato.format(fecha));
+        datProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
+        numProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1));
+        sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+        descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3));
+        modelo = String.valueOf(this.vistaL.jTable1.getValueAt(i, 4));
+        color = String.valueOf(this.vistaL.jTable1.getValueAt(i, 5));
+        contenido = String.valueOf(this.vistaL.jTable1.getValueAt(i, 6));
+        bulto = String.valueOf(this.vistaL.jTable1.getValueAt(i, 7));
+        pesoEmpaque = String.valueOf(this.vistaL.jTable1.getValueAt(i, 8));
+        cantidadBultos = String.valueOf(this.vistaL.jTable1.getValueAt(i, 9));
+
+        //  if(selecArchivo.showDialog(null, "Crear")==JFileChooser.APPROVE_OPTION){
+        //    archivo=selecArchivo.getSelectedFile();
+        // }
+
+        /*A continuación se realiza la iniciación del documento que se estara construyendo 
+        junto con la definición de los parrafos*/
+        Document doc = new Document(PageSize.LEGAL_LANDSCAPE);
         ByteArrayOutputStream archivotemp = new ByteArrayOutputStream();
         PdfWriter pdf = PdfWriter.getInstance(doc, archivotemp);
-        doc.setPageSize(rec);
-        doc.setMargins(0, 0, 10, 50);
 
+        doc.setPageSize(rec);
+        doc.setMargins(4, 4, 12, 4);
+        doc.setMarginMirroring(columna);
         doc.open();
         Barcode128 code = new Barcode128();
+        //Creamos el codigo de barras con el SKU
         code.setCode(sku);
         Image img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
-        img.scaleToFit(70, 50);
+        img.scaleToFit(50, 30);
+
+        //Definimos los parrafos
+        //----------------------------------------------------------
+        Paragraph datProvedorP = new Paragraph();
+        Paragraph numProvedorP = new Paragraph();
+        Paragraph skuP = new Paragraph();
         Paragraph parrafo = new Paragraph();
-        Paragraph sku_ = new Paragraph();
+        Paragraph modeloP = new Paragraph();
+        Paragraph colorP = new Paragraph();
+        Paragraph contenidoP = new Paragraph();
+        Paragraph bultoP = new Paragraph();
+        Paragraph pesoEmpaqueP = new Paragraph();
+        Paragraph cantidadBultosP = new Paragraph();
+        //-----------------------------------------------------------
         Paragraph header = new Paragraph();
         Paragraph line = new Paragraph();
-        Paragraph line2 = new Paragraph(10);
-        Paragraph salto = new Paragraph();
-        parrafo.setAlignment(Paragraph.ALIGN_CENTER);
-        header.setAlignment(Paragraph.ALIGN_CENTER);
+        Paragraph salto = new Paragraph(6);
+
+        // se define la alineación junto con el tamaño que tendran las letras
+        //-------------------------------------------------------------------
+        datProvedorP.setAlignment(Paragraph.ALIGN_LEFT);
+        numProvedorP.setAlignment(Paragraph.ALIGN_LEFT);
+        skuP.setAlignment(Paragraph.ALIGN_LEFT);
+        parrafo.setAlignment(Paragraph.ALIGN_LEFT);
+        modeloP.setAlignment(Paragraph.ALIGN_LEFT);
+        colorP.setAlignment(Paragraph.ALIGN_LEFT);
+        contenidoP.setAlignment(Paragraph.ALIGN_LEFT);
+        bultoP.setAlignment(Paragraph.ALIGN_LEFT);
+        pesoEmpaqueP.setAlignment(Paragraph.ALIGN_LEFT);
+        cantidadBultosP.setAlignment(Paragraph.ALIGN_LEFT);
+        //-------------------------------------------------------------------        
+
+        header.setAlignment(Paragraph.ALIGN_RIGHT);
         line.setAlignment(Paragraph.ALIGN_CENTER);
-        line.setAlignment(Paragraph.ALIGN_CENTER);
-        sku_.setAlignment(Paragraph.ALIGN_CENTER);
-        parrafo.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));
-        parrafo.setIndentationLeft(8);
-        parrafo.setIndentationRight(8);
-        sku_.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));
-        header.setFont(FontFactory.getFont("Tahoma", 20, Font.BOLD, BaseColor.DARK_GRAY));
-        line2.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        //------------------------------------------------------------------
+        //Definición del tamaño de letra
+        datProvedorP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+
+        numProvedorP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+
+        skuP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        /*        skuP.setSpacingBefore(5);
+        skuP.setSpacingAfter(5);
+        skuP.setIndentationLeft(10);
+        skuP.setIndentationRight(10);*/
+
+        parrafo.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        /*        parrafo.setIndentationLeft(8);
+        parrafo.setIndentationRight(8);*/
+
+        modeloP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        colorP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        contenidoP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        bultoP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        pesoEmpaqueP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        cantidadBultosP.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+
+        header.setFont(FontFactory.getFont("Arial", 12, Font.BOLD, BaseColor.DARK_GRAY));
+        header.setIndentationLeft(10);
+        header.setIndentationRight(10);
+        //-------------------------------------------------------------------------------
+       
         doc.open();
-
-        header.add("Claroshop");
+        //      header.add("Claroshop");
+        //      header.add("\n" + "__________");
         salto.add("\n");
-        line.add("_______________________________");
-        line2.add("_________________________________________");
+        //comienza el while para dar inicio a los ciclos y poder obtener los datos de la tabla
         while (i < this.vistaL.jTable1.getRowCount()) {
-            columna = (boolean) this.vistaL.jTable1.getValueAt(i, 10);
-            if (columna == true) {
-                sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
+            for (int h = 0; h < Integer.parseInt(cantidadBultos); h++) {
+                columna = (boolean) this.vistaL.jTable1.getValueAt(i, 10);
+                if (columna == true) {
 
-                if (sku.length() > 9) {
+                    datProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 0));
+                    numProvedor = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1));
+                    sku = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+                    descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3));
+                    modelo = String.valueOf(this.vistaL.jTable1.getValueAt(i, 4));
+                    color = String.valueOf(this.vistaL.jTable1.getValueAt(i, 5));
+                    contenido = String.valueOf(this.vistaL.jTable1.getValueAt(i, 6));
+                    bulto = String.valueOf(this.vistaL.jTable1.getValueAt(i, 7));
+                    pesoEmpaque = String.valueOf(this.vistaL.jTable1.getValueAt(i, 8));
+                    cantidadBultos = String.valueOf(this.vistaL.jTable1.getValueAt(i, 9));
 
-                    sku = sku.substring(0, 9);
-
-                }
-                ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
-                code.setCode(sku);
-                img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
-                img.scaleToFit(90, 90);
-                if (sku.length() < 5) {
-                    img.scaleToFit(65, 65);
-                    if (sku.length() < 3) {
-                        img.scaleToFit(50, 50);
-
+                    //Validación de los sku de cada uno 
+                    if (sku.length() > 13) {
+                        sku = sku.substring(0, 12);
                     }
 
-                }
-                img.setAlignment(img.ALIGN_CENTER);
+                    //           ups = String.valueOf(this.vistaL.jTable1.getValueAt(i, 2));
+                    code.setCode(sku);
+                    img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
+                    img.scaleToFit(100, 70);
+                    img.setBorderColorBottom(BaseColor.WHITE);
+                    img.setBorderWidthBottom(8);
+                    img.setAlignment(img.ALIGN_RIGHT);
+                    descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 3)).toUpperCase();
+                    if (descripcion.length() > 38) {
 
-                descripcion = String.valueOf(this.vistaL.jTable1.getValueAt(i, 1)).toUpperCase();
+                        descripcion = descripcion.substring(0, 38);
 
-                // String  descripcion2;
-                if (descripcion.length() > 40) {
-                    descripcion = descripcion.substring(0, 40);
+                    }
+                    descripcion2 = descripcion.toCharArray();
+                    if (h + 1 == Integer.parseInt(cantidadBultos)) {
+                        i = i + 1;
+                    }
 
-                }
-
-                i = i + 1;
-                doc.add(header);
-                doc.add(line);
-                sku_.add("SKU:" + " " + sku);
-                parrafo.add(descripcion);
-                doc.add(sku_);
-                doc.add(line);
-                if (descripcion.length() < 34) {
+                    header.add(fechaE);
+                    doc.add(header);
+                    datProvedorP.add("Proveedor:" + " " + datProvedor);
+                    doc.add(datProvedorP);
+                    numProvedorP.add("No. De Provedor:" + " " + numProvedor);
+                    doc.add(numProvedorP);
+                    skuP.add("SKU:" + " " + sku);
+//                skuP.add("SKU:" + " " + sku + "\n" + "___________");
+                    doc.add(skuP);
+                    doc.add(img);
+                    if (descripcion.length() < 20) {
+                        doc.add(salto);
+                    }
+                    
+                    parrafo.add("Descripción:" + " " + descripcion);
+                    doc.add(parrafo);
                     doc.add(salto);
-                }
-                doc.add(parrafo);
 
-                doc.add(line);
-                doc.add(img);
-                doc.add(salto);
-                doc.add(line2);
-                pdf.getPageSize();
+                    modeloP.add("Modelo:" + " " + modelo);
+                    doc.add(modeloP);
 
-                parrafo.removeAll(parrafo);
-                sku_.removeAll(sku_);
-                if (i + 1 > this.vistaL.jTable1.getRowCount()) {
+                    colorP.add("Color:" + " " + color);
+                    doc.add(colorP);
+                    contenidoP.add("contenido:"+" "+contenido +" " +"piezas");
+                    doc.add(contenidoP);
 
-                    doc.close();
+                    int cuentaBulto;
+                    cuentaBulto = Integer.parseInt(bulto) + h;
+                    bulto = String.valueOf(cuentaBulto);
+                    bultoP.add("Bulto:" + " " + bulto + " " + "de" + " " + cantidadBultos);
+                    doc.add(bultoP);
+                    doc.add(salto);
 
-                    ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
+                    pesoEmpaqueP.add("Peso con empaque:" + " " + pesoEmpaque);
+                    doc.add(pesoEmpaqueP);
 
-                    PDDocument documento12 = PDDocument.load(input);
-
-                    PrinterJob job = PrinterJob.getPrinterJob();
-                    if (job.printDialog() == true) {
-
-                        job.setPageable(new PDFPageable(documento12));
-                        job.print();
+                    for (int j = 0; j < descripcion.length(); j++) {
+                        desa = String.valueOf(descripcion2[j]);
+                        parrafo.add(desa);
                     }
-                }
-            } else if (columna == false) {
-                i = i + 1;
-                if (i + 1 > this.vistaL.jTable1.getRowCount()) {
-                    doc.close();
-                    ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
-                    PDDocument documento12 = PDDocument.load(input);
+                    //  parrafo.add("\n" + "___________");
 
-                    PrinterJob job = PrinterJob.getPrinterJob();
-                    if (job.printDialog() == true) {
-                        job.setPageable(new PDFPageable(documento12));
-                        job.print();
+                    if (descripcion.length() < 34) {
+                        doc.add(salto);
+                    }
+                    //     doc.add(parrafo);
+
+                    line.setSpacingBefore((float) -2);
+                    pdf.getPageSize();
+                    header.removeAll(header);
+                    contenidoP.removeAll(contenidoP);
+                    datProvedorP.removeAll(datProvedorP);
+                    numProvedorP.removeAll(numProvedorP);
+                    modeloP.removeAll(modeloP);
+                    colorP.removeAll(colorP);
+                    bultoP.removeAll(bultoP);
+                    pesoEmpaqueP.removeAll(pesoEmpaqueP);
+                    parrafo.removeAll(parrafo);
+                    skuP.removeAll(skuP);
+
+                    if (i + 1 > this.vistaL.jTable1.getRowCount()) {
+                        doc.close();
+                        ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
+                        PDDocument documento12 = PDDocument.load(input);
+                        PrinterJob job = PrinterJob.getPrinterJob();
+                        if (job.printDialog() == true) {
+                            job.setPageable(new PDFPageable(documento12));
+                            job.print();
+                        }
+                    }
+                } else if (columna == false) {
+                    if (h + 1 == Integer.parseInt(cantidadBultos)) {
+                        i = i + 1;
                     }
 
+
+                    if (i + 1 > this.vistaL.jTable1.getRowCount()) {
+                        doc.close();
+                        ByteArrayInputStream input = new ByteArrayInputStream(archivotemp.toByteArray());
+                        PDDocument documento12 = PDDocument.load(input);
+
+                        PrinterJob job = PrinterJob.getPrinterJob();
+                        if (job.printDialog() == true) {
+                            job.setPageable(new PDFPageable(documento12));
+                            job.print();
+                        }
+                    }
                 }
             }
-
         }
     }
-
+    }
     public void imprimir() {
         Document documento = new Document();
         try {
